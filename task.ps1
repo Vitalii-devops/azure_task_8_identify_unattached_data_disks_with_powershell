@@ -8,5 +8,12 @@ $unattachedDisks = $allDisks | Where-Object {
     ($_.OsType -eq $null)
 }
 
-@($unattachedDisks) | ConvertTo-Json -Depth 10 | Out-File -FilePath "result.json" -Encoding utf8
+$jsonElements = @()
+foreach ($disk in $unattachedDisks) {
+    $jsonElements += $disk | ConvertTo-Json -Depth 10
+}
+
+$jsonArray = "[`n" + ($jsonElements -join ",`n") + "`n]"
+
+Set-Content -Path "result.json" -Value $jsonArray -Encoding utf8
 
